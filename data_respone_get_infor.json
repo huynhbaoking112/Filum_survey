@@ -1,0 +1,22 @@
+
+{
+    "survey_id": "65f23b8e9f1a2c001c8e4b32",
+    "answers": [
+      {
+        "question_id": 1,
+        "choice_type": "CSAT",
+        "total": 150
+      },
+      {
+        "question_id": 3,
+        "choice_type": "single",
+        "total":120
+      },
+      {
+        "question_id": 4,
+        "choice_type": "multi",
+        "total":100
+      }
+    ]
+  }
+  

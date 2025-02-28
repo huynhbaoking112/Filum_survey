@@ -9,6 +9,7 @@ class Answer(EmbeddedDocument):
     max_selection = IntField()  # Số lượng tối đa lựa chọn
     num_selection = IntField()  # Số lượng lựa chọn thực tế của người dùng
     required = BooleanField(default=False)  # Câu hỏi có bắt buộc không
+    counter = IntField(default = 1)
 
 class SurveyResponse(Document):
     survey_id = StringField(required=True)  # Có thể dùng ReferenceField(Survey) nếu muốn liên kết
