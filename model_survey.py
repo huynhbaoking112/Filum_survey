@@ -21,9 +21,3 @@ class Survey(Document):
     default_lan = StringField(required=True)
     translation = ListField(EmbeddedDocumentField(Translation), required=True)
     questions = ListField(EmbeddedDocumentField(Question))
-
-    def clean(self):
-        if not (1 <= len(self.questions) <= 10):
-            raise ValidationError("A survey must contain between 1 and 10 questions.")
-        if not any(q.choice_type == 'CSAT' for q in self.questions):
-            raise ValidationError("A survey must have at least one CSAT question.")

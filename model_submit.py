@@ -20,4 +20,3 @@ class SurveyResponse(Document):
     submitted_at = DateTimeField(required=True)
     answers = ListField(EmbeddedDocumentField(Answer))
 
-    meta = {'collection': 'survey_responses'}  # Định nghĩa collection trong MongoDB
