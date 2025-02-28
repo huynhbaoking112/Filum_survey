@@ -1,0 +1,119 @@
+{
+    "default_lan": "vietnam",
+    "translation": {
+      "vietnam": {
+        "question_1_title": "Đây là title của question 1 (CSAT)",
+        "question_2_title": "Đây là title của question 2 (Văn bản)",
+        "question_3_title": "Đây là title của question 3 (Đơn)",
+        "question_4_title": "Đây là title của question 4 (Đa)",
+        "question_1_an_1": "Đây là đáp án 1 của q1",
+        "question_1_an_2": "Đây là đáp án 2 của q1",
+        "question_1_an_3": "Đây là đáp án 3 của q1",
+        "question_1_an_4": "Đây là đáp án 4 của q1",
+        "question_1_an_5": "Đây là đáp án 5 của q1",
+        "question_3_an_1": "Đây là đáp án 1 của q3",
+        "question_3_an_2": "Đây là đáp án 2 của q3",
+        "question_4_an_1": "Đây là đáp án 1 của q4",
+        "question_4_an_2": "Đây là đáp án 2 của q4",
+        "question_4_an_3": "Đây là đáp án 3 của q4"
+      },
+      "us": {
+        "question_1_title": "Đây là title của question 1 (CSAT)",
+        "question_2_title": "Đây là title của question 2 (Văn bản)",
+        "question_3_title": "Đây là title của question 3 (Đơn)",
+        "question_4_title": "Đây là title của question 4 (Đa)",
+        "question_1_an_1": "Đây là đáp án 1 của q1",
+        "question_1_an_2": "Đây là đáp án 2 của q1",
+        "question_1_an_3": "Đây là đáp án 3 của q1",
+        "question_1_an_4": "Đây là đáp án 4 của q1",
+        "question_1_an_5": "Đây là đáp án 5 của q1",
+        "question_3_an_1": "Đây là đáp án 1 của q3",
+        "question_3_an_2": "Đây là đáp án 2 của q3",
+        "question_4_an_1": "Đây là đáp án 1 của q4",
+        "question_4_an_2": "Đây là đáp án 2 của q4",
+        "question_4_an_3": "Đây là đáp án 3 của q4"
+      }
+    },
+    "question": [
+      {
+        "id": 1,
+        "title": "question_1_title",
+        "choice_type": "CSAT",
+        "number_op": 5,
+        "required": true,
+        "options": [
+          {
+            "id": 1,
+            "title": "question_1_an_1"
+          },
+          {
+            "id": 2,
+            "title": "question_1_an_2"
+          },
+          {
+            "id": 3,
+            "title": "question_1_an_3"
+          },
+          {
+            "id": 4,
+            "title": "question_1_an_4"
+          },
+          {
+            "id": 5,
+            "title": "question_1_an_5"
+          }
+        ],
+        "max_selection": null
+      },
+      {
+        "id": 2,
+        "title": "question_2_title",
+        "choice_type": "text",
+        "number_op": null,
+        "required": false,
+        "options": [],
+        "max_selection": null
+      },
+      {
+        "id": 3,
+        "title": "question_3_title",
+        "choice_type": "single",
+        "number_op": null,
+        "required": true,
+        "options": [
+          {
+            "id": 1,
+            "title": "question_3_an_1"
+          },
+          {
+            "id": 2,
+            "title": "question_3_an_2"
+          }
+        ],
+        "max_selection": null
+      },
+      {
+        "id": 4,
+        "title": "question_4_title",
+        "choice_type": "multi",
+        "number_op": null,
+        "required": false,
+        "options": [
+          {
+            "id": 1,
+            "title": "question_4_an_1"
+          },
+          {
+            "id": 2,
+            "title": "question_4_an_2"
+          },
+          {
+            "id": 3,
+            "title": "question_4_an_3"
+          }
+        ],
+        "max_selection": 2
+      }
+    ]
+  }
+  
