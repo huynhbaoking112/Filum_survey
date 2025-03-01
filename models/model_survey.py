@@ -18,6 +18,7 @@ class Translation(EmbeddedDocument):
     translations = MapField(StringField(), required=True)
 
 class Survey(Document):
+    id = StringField(primary_key=True)
     default_lan = StringField(required=True)
     translation = ListField(EmbeddedDocumentField(Translation), required=True)
     questions = ListField(EmbeddedDocumentField(Question))
