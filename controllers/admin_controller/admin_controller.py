@@ -15,8 +15,23 @@ def generate_unique_url():
         if not redis_client.getbit('url_bitmap', url_hash):
             return url, url_hash
 
+from fastapi import HTTPException
+
 def controller_create_survey(data):
     try:
+        # Validate survey data
+        if 'default_lan' not in data or not data['default_lan']:
+            raise HTTPException(status_code=400, detail="Survey must have a default language")
+        
+        if 'translation' not in data or data['default_lan'] not in data['translation']:
+            raise HTTPException(status_code=400, detail="Default language must be present in translations")
+        
+        if 'question' not in data or not (1 <= len(data['question']) <= 10):
+            raise HTTPException(status_code=400, detail="Survey must have between 1 and 10 questions")
+        
+        if not any(q['choice_type'] == 'CSAT' for q in data['question']):
+            raise HTTPException(status_code=400, detail="Survey must have at least one CSAT question")
+
         url, url_hash = generate_unique_url()
         translations = [
             Translation(language=lang, translations=trans)
@@ -59,12 +74,17 @@ def controller_create_survey(data):
         redis_client.setex(f"url:{url}", 30 * 24 * 60 * 60, str(saved_survey))
         
         return {
-            "survey_id": f"filum.ai/s/{url}",
+            "survey_id": f"filum/s/{url}",
             "created_at": survey_data["created_at"],
             "time": survey_data["time"]
         }
+    
+    except HTTPException as e:
+        raise e  # Giữ nguyên lỗi nếu là HTTPException
+    
     except Exception as e:
-        return {"error": f"Failed to create survey: {e}"}
+        raise HTTPException(status_code=500, detail=f"Failed to create survey: {str(e)}")
+
 
 def controller_get_visual(survey_id):
     try:
@@ -93,4 +113,4 @@ def controller_get_visual(survey_id):
         
         return report_data
     except Exception as e:
-        return {"error": f"Failed to generate report: {e}"}
+         raise HTTPException(status_code=500, detail=f"Failed to generate report: {e}")

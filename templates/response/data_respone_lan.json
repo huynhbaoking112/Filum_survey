@@ -1,0 +1,85 @@
+{
+
+    "question": [
+      {
+        "id": 1,
+        "title": "Đây là title của question 1 (CSAT)",
+        "choice_type": "CSAT",
+        "number_op": 5,
+        "required": true,
+        "options": [
+          {
+            "id": 1,
+            "title": "Đây là đáp án 1 của q1"
+          },
+          {
+            "id": 2,
+            "title": "Đây là đáp án 2 của q1"
+          },
+          {
+            "id": 3,
+            "title": "Đây là đáp án 3 của q1"
+          },
+          {
+            "id": 4,
+            "title": "Đây là đáp án 4  của q1"
+          },
+          {
+            "id": 5,
+            "title": "Đây là đáp án 5 của q1"
+          }
+        ],
+        "max_selection": null
+      },
+      {
+        "id": 2,
+        "title": "Đây là title của question 2 (Văn bản)",
+        "choice_type": "text",
+        "number_op": null,
+        "required": false,
+        "options": [],
+        "max_selection": null
+      },
+      {
+        "id": 3,
+        "title": "Đây là title của question 3 (Đơn)",
+        "choice_type": "single",
+        "number_op": null,
+        "required": true,
+        "options": [
+          {
+            "id": 1,
+            "title": "Đây là đáp án 1 của q3"
+          },
+          {
+            "id": 2,
+            "title": "Đây là đáp án 2 của q3"
+          }
+        ],
+        "max_selection": null
+      },
+      {
+        "id": 4,
+        "title": "Đây là title của question 4 (Đa)",
+        "choice_type": "multi",
+        "number_op": null,
+        "required": false,
+        "options": [
+          {
+            "id": 1,
+            "title": "Đây là đáp án 1 của q4"
+          },
+          {
+            "id": 2,
+            "title": "Đây là đáp án 2 của q4"
+          },
+          {
+            "id": 3,
+            "title": "Đây là đáp án 3 của q4"
+          }
+        ],
+        "max_selection": 2
+      }
+    ]
+  }
+  

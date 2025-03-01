@@ -9,6 +9,10 @@ router = APIRouter()
 async def read_client_survey(survey_id: str):
     return client_controller.read_client_survey_controller(survey_id) 
 
+@router.get("/filum/{survey_id}/lan/{lan}")
+async def read_client_survey(survey_id: str, lan: str):
+    return client_controller.read_client_survey_lan(survey_id, lan) 
+
 
 # all post router 
 @router.post("/filum/s/{survey_id}")

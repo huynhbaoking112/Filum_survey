@@ -3,6 +3,7 @@ from models.model_survey import Survey
 from models.model_submit import SurveyResponse, Answer
 import binascii
 import json
+from fastapi import HTTPException
 from datetime import datetime
 
 def create_client_survey_controller(survey_id, data):
@@ -10,25 +11,25 @@ def create_client_survey_controller(survey_id, data):
         # Check if survey exists in bitmap
         url_hash = binascii.crc32(survey_id.encode())
         if not redis_client.getbit('url_bitmap', url_hash):
-            return {"error": "Survey not found"}
+            raise HTTPException(status_code=404, detail="Survey not found")
         
         # Retrieve survey from database to validate required questions
         survey = Survey.objects(id=survey_id).first()
         if not survey:
-            return {"error": "Survey not found in database"}
+            raise HTTPException(status_code=404, detail="Survey not found in database")
         
         # Validate required questions
         required_questions = {q.id for q in survey.questions if q.required}
         answered_questions = {ans['question_id'] for ans in data['answers']}
         if not required_questions.issubset(answered_questions):
-            return {"error": "You must complete all required questions"}
+            raise HTTPException(status_code=400, detail="You must complete all required questions")
         
         # Validate max_selection
         for ans in data['answers']:
             question = next((q for q in survey.questions if q.id == ans['question_id']), None)
             if question and question.max_selection is not None:
                 if ans.get('num_selection', 0) > question.max_selection:
-                    return {"error": f"Question {ans['question_id']} exceeds max selection limit"}
+                    raise HTTPException(status_code=400, detail=f"Question {ans['question_id']} exceeds max selection limit")
         
         # Create SurveyResponse object
         answers = [
@@ -56,8 +57,11 @@ def create_client_survey_controller(survey_id, data):
         survey_response.save()
         
         return {"message": "Survey response submitted successfully"}
+    except HTTPException as e:
+        raise e  # Giữ nguyên mã lỗi nếu đã là HTTPException
+
     except Exception as e:
-        return {"error": f"Failed to submit survey response: {e}"}
+        raise HTTPException(status_code=500, detail=f"Failed to submit survey response: {e}")
 
 def controller_get_survey_from_cache(survey_id):
     try:
@@ -67,7 +71,7 @@ def controller_get_survey_from_cache(survey_id):
         else:
             return None
     except Exception as e:
-        return {"error": f"Failed to retrieve survey from cache: {e}"}
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve survey from cache: {e}")
 
 def read_client_survey_controller(survey_id):
     try:
@@ -80,13 +84,65 @@ def read_client_survey_controller(survey_id):
         # If not found in cache, check bitmap
         url_hash = binascii.crc32(survey_id.encode())
         if not redis_client.getbit('url_bitmap', url_hash):
-            return {"error": "Survey not found"}
+            raise HTTPException(status_code=404, detail="Survey not found")
         
         # If found in bitmap, retrieve from database
         survey = Survey.objects(id=survey_id).first()
         if survey:
             return json.loads(survey.to_json())
         else:
-            return {"error": "Survey not found in database"}
+            raise HTTPException(status_code=404, detail="Survey not found")
+    except HTTPException as e:
+        raise e  # Giữ nguyên mã lỗi nếu đã là HTTPException
+
     except Exception as e:
-        return {"error": f"Failed to retrieve survey: {e}"}
+        raise HTTPException(status_code=500, detail=f"Failed to submit survey response: {e}")
+
+def read_client_survey_lan(survey_id, lan):
+    try:
+        # Check if survey exists in bitmap
+        url_hash = binascii.crc32(survey_id.encode())
+        if not redis_client.getbit('url_bitmap', url_hash):
+            raise HTTPException(status_code=404, detail="Survey not found")
+        
+        # Retrieve survey from database
+        survey = Survey.objects(id=survey_id).first()
+        if not survey:
+            raise HTTPException(status_code=404, detail="Survey not found in database")
+        
+        # Check if the requested language exists in translations
+        translation = next((t for t in survey.translation if t.language == lan), None)
+        if not translation:
+            raise HTTPException(status_code=404, detail="Translation not found for the requested language")
+        
+        # Prepare the response data
+        translated_questions = []
+        for question in survey.questions:
+            translated_question = {
+                "id": question.id,
+                "title": translation.translations.get(question.title, question.title),
+                "choice_type": question.choice_type,
+                "number_op": question.number_op,
+                "required": question.required,
+                "options": [
+                    {
+                        "id": option.id,
+                        "title": translation.translations.get(option.title, option.title)
+                    }
+                    for option in question.options
+                ],
+                "max_selection": question.max_selection
+            }
+            translated_questions.append(translated_question)
+        
+        response_data = {
+            "question": translated_questions
+        }
+        
+        return response_data
+    except HTTPException as e:
+        raise e  # Giữ nguyên mã lỗi nếu đã là HTTPException
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve survey: {e}")
+
