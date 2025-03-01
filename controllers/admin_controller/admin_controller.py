@@ -7,6 +7,8 @@ import binascii
 from models.model_survey import Survey, Translation, Question, Option
 from models.model_submit import SurveyResponse
 from initialize.redis_config import redis_client
+from fastapi import HTTPException
+import json
 
 def generate_unique_url():
     while True:
@@ -14,8 +16,6 @@ def generate_unique_url():
         url_hash = binascii.crc32(url.encode())
         if not redis_client.getbit('url_bitmap', url_hash):
             return url, url_hash
-
-from fastapi import HTTPException
 
 def controller_create_survey(data):
     try:
@@ -63,7 +63,7 @@ def controller_create_survey(data):
         # Set the bitmap after successfully creating the survey
         redis_client.setbit('url_bitmap', url_hash, 1)
 
-        saved_survey = Survey.objects(id=url).first() 
+        saved_survey = Survey.objects(id=url).first()
         
         survey_data = {
             "survey_id": str(survey.id),
@@ -71,7 +71,8 @@ def controller_create_survey(data):
             "time": datetime.datetime.now().strftime("%H:%M:%S")
         }
         
-        redis_client.setex(f"url:{url}", 30 * 24 * 60 * 60, str(saved_survey))
+        # Cache the survey data
+        redis_client.setex(f"url:{url}", 30 * 24 * 60 * 60, json.dumps(saved_survey.to_mongo(), ensure_ascii=False).encode('utf-8'))
         
         return {
             "survey_id": f"filum/s/{url}",
@@ -84,7 +85,6 @@ def controller_create_survey(data):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create survey: {str(e)}")
-
 
 def controller_get_visual(survey_id):
     try:

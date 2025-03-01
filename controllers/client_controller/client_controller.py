@@ -78,7 +78,6 @@ def read_client_survey_controller(survey_id):
         # Check cache first
         survey_data = controller_get_survey_from_cache(survey_id)
         if survey_data:
-            print(survey_data)
             return survey_data
         
         # If not found in cache, check bitmap
@@ -96,7 +95,7 @@ def read_client_survey_controller(survey_id):
         raise e  # Giữ nguyên mã lỗi nếu đã là HTTPException
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to submit survey response: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get survey : {e}")
 
 def read_client_survey_lan(survey_id, lan):
     try:
